@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 public class BusRoutes {
@@ -45,7 +46,9 @@ public class BusRoutes {
   }
 
   public BusRoutes filterByStationId(Integer stationId) {
-    return null;
+    return new BusRoutes(routes.stream()
+            .filter(route -> route.contains(stationId.toString()))
+            .collect(toList()));
   }
 
   public Integer count() {
