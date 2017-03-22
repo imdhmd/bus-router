@@ -20,26 +20,21 @@ public class BusRoutes {
     this.routes = routes;
   }
 
-  public static BusRoutes from(InputStream in) {
+  public static BusRoutes from(InputStream in) throws IOException {
     final List<Set<String>> routes = new ArrayList<>();
     final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
-    try {
-      reader.readLine();
-      String next = reader.readLine();
+    reader.readLine();
+    String next = reader.readLine();
 
-      while (next != null) {
-        Set<String> nextRoute = stream(next.split("\\s"))
-                .skip(1)
-                .collect(toSet());
+    while (next != null) {
+      Set<String> nextRoute = stream(next.split("\\s"))
+              .skip(1)
+              .collect(toSet());
 
-        routes.add(nextRoute);
+      routes.add(nextRoute);
 
-        next = reader.readLine();
-      }
-
-    } catch (IOException e) {
-      e.printStackTrace();
+      next = reader.readLine();
     }
 
     return new BusRoutes(routes);
