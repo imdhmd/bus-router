@@ -12,6 +12,7 @@ import spark.Spark;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -19,9 +20,12 @@ import static org.mockito.Mockito.when;
 
 public class AppTest {
 
+  private static final int PORT = ThreadLocalRandom.current().nextInt(60001, 64999);
+  private static final String BASE_URI = "http://localhost:" + PORT + "/api/direct?";
+
   private final Gson gson = new Gson();
   private final QueryRoutes queryRoutes = mock(QueryRoutes.class);
-  private final App app = new App(8080, queryRoutes);
+  private final App app = new App(PORT, queryRoutes);
   private final Client client = ClientBuilder.newClient();
 
   @Before
@@ -34,7 +38,7 @@ public class AppTest {
     when(queryRoutes.routeExists(3, 6))
             .thenReturn(true);
 
-    String result = client.target("http://localhost:8080/api/direct?dep_sid=3&arr_sid=6")
+    String result = client.target(BASE_URI + "dep_sid=3&arr_sid=6")
             .request()
             .get(String.class);
 
@@ -49,7 +53,7 @@ public class AppTest {
     when(queryRoutes.routeExists(6, 8))
             .thenReturn(false);
 
-    String result = client.target("http://localhost:8080/api/direct?dep_sid=6&arr_sid=8")
+    String result = client.target(BASE_URI + "dep_sid=6&arr_sid=8")
             .request()
             .get(String.class);
 
@@ -61,7 +65,7 @@ public class AppTest {
 
   @Test
   public void shouldGetErrorResponseForInvalidRequest() {
-    Response result =  client.target("http://localhost:8080/api/direct?dep_sid=invalid&arr_sid=8")
+    Response result = client.target(BASE_URI + "dep_sid=invalid&arr_sid=8")
             .request()
             .get();
 
@@ -77,7 +81,7 @@ public class AppTest {
     when(queryRoutes.routeExists(4, 8))
             .thenThrow(new RuntimeException());
 
-    Response result =  client.target("http://localhost:8080/api/direct?dep_sid=4&arr_sid=8")
+    Response result = client.target(BASE_URI + "dep_sid=4&arr_sid=8")
             .request()
             .get();
 
