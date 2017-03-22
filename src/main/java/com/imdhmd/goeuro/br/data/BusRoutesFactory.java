@@ -21,7 +21,7 @@ public class BusRoutesFactory {
   private static final Logger LOG = getLogger(BusRoutes.class);
 
   public static BusRoutes from(InputStream in) throws IOException {
-    LOG.info("Loading data file for bus routes");
+    LOG.info("Loading bus routes from data file");
 
     final BusRoutes busRoutes = new BusRoutes();
     final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -41,7 +41,7 @@ public class BusRoutesFactory {
       next = reader.readLine();
     }
 
-    LOG.info("Finished loading data file for bus routes");
+    LOG.info("Finished loading bus routes from data file");
     return busRoutes;
   }
 
