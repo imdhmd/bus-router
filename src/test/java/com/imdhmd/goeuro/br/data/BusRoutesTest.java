@@ -21,7 +21,7 @@ public class BusRoutesTest {
             "1 3 1 6 5\n" +
             "2 0 6 4").getBytes());
 
-    busRoutes = BusRoutes.from(in);
+    busRoutes = BusRoutesFactory.from(in);
   }
 
   @Test

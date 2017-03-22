@@ -28,24 +28,22 @@ public class App {
     port(port);
 
     get(
-      "/api/direct",
+            "/api/direct",
+            (request, response) -> {
+              LOG.info(format("Direct bus route request received for dep_sid [%s] and arr_sid [%s]",
+                      request.queryParams("dep_sid"), request.queryParams("arr_sid")));
 
-      (request, response) -> {
-        LOG.info(format("Direct bus route request received for dep_sid [%s] and arr_sid [%s]",
-                request.queryParams("dep_sid"), request.queryParams("arr_sid")));
+              final Integer departureStationId = parseInt(request.queryParams("dep_sid"));
+              final Integer arrivalStationId = parseInt(request.queryParams("arr_sid"));
+              final boolean routeExists = queryRoutes.doesDirectRouteExist(departureStationId, arrivalStationId);
 
-        final Integer departureStationId = parseInt(request.queryParams("dep_sid"));
-        final Integer arrivalStationId = parseInt(request.queryParams("arr_sid"));
-        final boolean routeExists = queryRoutes.routeExists(departureStationId, arrivalStationId);
+              LOG.info(format("Sending direct bus route response for dep_sid [%s] and arr_sid [%s] as %s",
+                      departureStationId, arrivalStationId, routeExists));
 
-        LOG.info(format("Sending direct bus route response for dep_sid [%s] and arr_sid [%s] as %s",
-                departureStationId, arrivalStationId, routeExists));
-
-        response.type("application/json");
-        return new DirectRouteResponse(departureStationId, arrivalStationId, routeExists);
-      },
-
-      gson::toJson
+              response.type("application/json");
+              return new DirectRouteResponse(departureStationId, arrivalStationId, routeExists);
+            },
+            gson::toJson
     );
 
     exception(NumberFormatException.class, (e, request, response) -> {

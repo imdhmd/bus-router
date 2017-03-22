@@ -9,7 +9,7 @@ public class QueryRoutes {
     this.busRoutes = busRoutes;
   }
 
-  public boolean routeExists(final Integer departureStationId, final Integer arrivalStationId) {
+  public boolean doesDirectRouteExist(final Integer departureStationId, final Integer arrivalStationId) {
     return busRoutes
             .directRoutes(departureStationId, arrivalStationId)
             .size() > 0;

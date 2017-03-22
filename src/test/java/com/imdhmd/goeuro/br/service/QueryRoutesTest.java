@@ -29,7 +29,7 @@ public class QueryRoutesTest {
     when(busRoutes.directRoutes(3, 6))
             .thenReturn(emptySet());
 
-    assertThat(queryRoutes.routeExists(3, 6))
+    assertThat(queryRoutes.doesDirectRouteExist(3, 6))
             .isFalse();
   }
 
@@ -38,7 +38,7 @@ public class QueryRoutesTest {
     when(busRoutes.directRoutes(3, 6))
             .thenReturn(singleton(1));
 
-    assertThat(queryRoutes.routeExists(3, 6))
+    assertThat(queryRoutes.doesDirectRouteExist(3, 6))
             .isTrue();
   }
 }

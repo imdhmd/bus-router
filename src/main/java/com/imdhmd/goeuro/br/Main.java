@@ -1,6 +1,7 @@
 package com.imdhmd.goeuro.br;
 
 import com.imdhmd.goeuro.br.data.BusRoutes;
+import com.imdhmd.goeuro.br.data.BusRoutesFactory;
 import com.imdhmd.goeuro.br.service.QueryRoutes;
 import org.apache.log4j.Logger;
 
@@ -16,7 +17,7 @@ public class Main {
 
     try {
 
-      final BusRoutes busRoutes = BusRoutes.from(new FileInputStream(dataFile));
+      final BusRoutes busRoutes = BusRoutesFactory.from(new FileInputStream(dataFile));
       final QueryRoutes queryRoutes = new QueryRoutes(busRoutes);
       final App app = new App(8088, queryRoutes);
 

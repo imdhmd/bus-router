@@ -35,7 +35,7 @@ public class AppTest {
 
   @Test
   public void shouldGetSuccessResponseForAnExistingDirectRoute() {
-    when(queryRoutes.routeExists(3, 6))
+    when(queryRoutes.doesDirectRouteExist(3, 6))
             .thenReturn(true);
 
     String result = client.target(BASE_URI + "dep_sid=3&arr_sid=6")
@@ -50,7 +50,7 @@ public class AppTest {
 
   @Test
   public void shouldGetSuccessResponseForANonExistingDirectRoute() {
-    when(queryRoutes.routeExists(6, 8))
+    when(queryRoutes.doesDirectRouteExist(6, 8))
             .thenReturn(false);
 
     String result = client.target(BASE_URI + "dep_sid=6&arr_sid=8")
@@ -78,7 +78,7 @@ public class AppTest {
 
   @Test
   public void shouldGetErrorResponseForInternalError() {
-    when(queryRoutes.routeExists(4, 8))
+    when(queryRoutes.doesDirectRouteExist(4, 8))
             .thenThrow(new RuntimeException());
 
     Response result = client.target(BASE_URI + "dep_sid=4&arr_sid=8")

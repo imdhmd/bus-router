@@ -1,53 +1,16 @@
 package com.imdhmd.goeuro.br.data;
 
-import org.apache.log4j.Logger;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
-import java.util.stream.Stream;
 
-import static com.imdhmd.goeuro.br.data.Pair.pair;
-import static java.util.Arrays.stream;
+import static com.imdhmd.goeuro.br.data.StationPair.pair;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
-import static org.apache.log4j.Logger.getLogger;
 
 public class BusRoutes {
+  private final Map<StationPair, Set<Integer>> directRoutes;
 
-  private static final Logger LOG = getLogger(BusRoutes.class);
-
-  private final Map<Pair<Integer>, Set<Integer>> directRoutes;
-
-  private BusRoutes(Map<Pair<Integer>, Set<Integer>> directRoutes) {
-    this.directRoutes = directRoutes;
-  }
-
-  public static BusRoutes from(InputStream in) throws IOException {
-    LOG.info("Loading data file for bus routes");
-
-    final Map<Pair<Integer>, Set<Integer>> directRoutes = new HashMap<>();
-    final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-    reader.readLine();
-    String next = reader.readLine();
-
-    while (next != null) {
-      Integer[] routeIdAndStationIds = stream(next.split("\\s")).mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
-      Integer routeId = routeIdAndStationIds[0];
-      Integer[] stationIds = stream(routeIdAndStationIds).skip(1).toArray(Integer[]::new);
-
-      stream(stationIds)
-              .flatMap(nextStationId -> makePairs(nextStationId, stationIds))
-              .forEach(pair -> addDirectRoute(pair, routeId, directRoutes));
-
-      next = reader.readLine();
-    }
-
-    LOG.info("Finished loading data file for bus routes");
-    return new BusRoutes(directRoutes);
+  BusRoutes() {
+    directRoutes = new HashMap<>();
   }
 
   public Set<Integer> directRoutes(Integer dep, Integer arr) {
@@ -56,20 +19,14 @@ public class BusRoutes {
                     .orElse(emptySet()));
   }
 
-  private static Stream<Pair<Integer>> makePairs(Integer stationId, Integer[] stationIds) {
-    return stream(stationIds)
-            .map(otherStationId -> pair(otherStationId, stationId))
-            .filter(p -> !p.equals(pair(stationId, stationId)));
-  }
+  void addDirectRoute(StationPair stationPair, Integer routeId) {
+    if (directRoutes.containsKey(stationPair)) {
 
-  private static void addDirectRoute(Pair<Integer> pair, Integer routeId, Map<Pair<Integer>, Set<Integer>> directRoutes) {
-    if (directRoutes.containsKey(pair)) {
-
-      directRoutes.get(pair).add(routeId);
+      directRoutes.get(stationPair).add(routeId);
 
     } else {
 
-      directRoutes.put(pair, new HashSet<Integer>() {{
+      directRoutes.put(stationPair, new HashSet<Integer>() {{
         add(routeId);
       }});
 
