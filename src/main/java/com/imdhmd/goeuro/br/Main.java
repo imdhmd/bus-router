@@ -24,6 +24,8 @@ public class Main {
 
     } catch (IOException e) {
       LOG.error("Unable to read from data file: " + dataFile, e);
+    } catch (NumberFormatException e) {
+      LOG.error("Data file contains invalid data", e);
     }
   }
 }
