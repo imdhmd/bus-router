@@ -4,9 +4,7 @@ import com.google.gson.Gson;
 import com.imdhmd.goeuro.br.response.DirectRouteResponse;
 import com.imdhmd.goeuro.br.response.ErrorResponse;
 import com.imdhmd.goeuro.br.service.QueryRoutes;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import spark.Spark;
 
 import javax.ws.rs.client.Client;
@@ -23,13 +21,13 @@ public class AppTest {
   private static final int PORT = ThreadLocalRandom.current().nextInt(60001, 64999);
   private static final String BASE_URI = "http://localhost:" + PORT + "/api/direct?";
 
-  private final Gson gson = new Gson();
-  private final QueryRoutes queryRoutes = mock(QueryRoutes.class);
-  private final App app = new App(PORT, queryRoutes);
-  private final Client client = ClientBuilder.newClient();
+  private static final QueryRoutes queryRoutes = mock(QueryRoutes.class);
+  private static final App app = new App(PORT, queryRoutes);
+  private static final Gson gson = new Gson();
+  private static final Client client = ClientBuilder.newClient();
 
-  @Before
-  public void setup() {
+  @BeforeClass
+  public static void setup() {
     app.start();
   }
 
@@ -92,9 +90,8 @@ public class AppTest {
             );
   }
 
-
-  @After
-  public void teardown() {
+  @AfterClass
+  public static void tearDown() {
     Spark.stop();
   }
 }
