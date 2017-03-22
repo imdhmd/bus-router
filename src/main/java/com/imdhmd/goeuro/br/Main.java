@@ -18,7 +18,7 @@ public class Main {
 
       final BusRoutes busRoutes = BusRoutes.from(new FileInputStream(dataFile));
       final QueryRoutes queryRoutes = new QueryRoutes(busRoutes);
-      final App app = new App(8080, queryRoutes);
+      final App app = new App(8088, queryRoutes);
 
       app.start();
 
