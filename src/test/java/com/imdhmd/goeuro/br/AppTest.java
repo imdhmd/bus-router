@@ -72,6 +72,23 @@ public class AppTest {
             );
   }
 
+  @Test
+  public void shouldGetErrorResponseForInternalError() {
+    when(queryRoutes.routeExists(4, 8))
+            .thenThrow(new RuntimeException());
+
+    Response result =  client.target("http://localhost:8080/api/direct?dep_sid=4&arr_sid=8")
+            .request()
+            .get();
+
+    assertThat(result.getStatus()).isEqualTo(500);
+    assertThat(gson.fromJson(result.readEntity(String.class), ErrorResponse.class))
+            .isEqualToComparingFieldByField(
+                    new ErrorResponse("Internal server error")
+            );
+  }
+
+
   @After
   public void teardown() {
     Spark.stop();

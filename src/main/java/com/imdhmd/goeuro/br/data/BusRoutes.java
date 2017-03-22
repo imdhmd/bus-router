@@ -1,5 +1,7 @@
 package com.imdhmd.goeuro.br.data;
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,8 +13,11 @@ import static com.imdhmd.goeuro.br.data.Pair.pair;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
+import static org.apache.log4j.Logger.getLogger;
 
 public class BusRoutes {
+
+  private static final Logger LOG = getLogger(BusRoutes.class);
 
   private final Map<Pair<Integer>, Set<Integer>> directRoutes;
 
@@ -21,6 +26,8 @@ public class BusRoutes {
   }
 
   public static BusRoutes from(InputStream in) throws IOException {
+    LOG.info("Loading data file for bus routes");
+
     final Map<Pair<Integer>, Set<Integer>> directRoutes = new HashMap<>();
     final BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
@@ -39,6 +46,7 @@ public class BusRoutes {
       next = reader.readLine();
     }
 
+    LOG.info("Finished loading data file for bus routes");
     return new BusRoutes(directRoutes);
   }
 
