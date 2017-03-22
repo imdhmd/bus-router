@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static java.util.Collections.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -25,17 +25,18 @@ public class QueryRoutesTest {
   }
 
   @Test
-  public void shouldSayThatRouteExistsIfThereIsAtleastOneRouteWithBothTheStations() {
-    final BusRoutes busRoutesContainingStation3 = mock(BusRoutes.class);
-    final BusRoutes busRoutesContainingStation3And6 = mock(BusRoutes.class);
+  public void shouldSayThatDirectRouteDoesNotExistWhenThereAreNoDirectRoutesBetweenTheStations() {
+    when(busRoutes.directRoutes(3, 6))
+            .thenReturn(emptySet());
 
-    when(busRoutes.filterByStationId(3))
-            .thenReturn(busRoutesContainingStation3);
-    when(busRoutesContainingStation3.filterByStationId(6))
-            .thenReturn(busRoutesContainingStation3And6);
-    when(busRoutesContainingStation3And6.count())
-            .thenReturn(1);
+    assertThat(queryRoutes.routeExists(3, 6))
+            .isFalse();
+  }
 
+  @Test
+  public void shouldSayThatRouteExistsIfThereIsAtleastOneDirectRouteBetweenTheStations() {
+    when(busRoutes.directRoutes(3, 6))
+            .thenReturn(singleton(1));
 
     assertThat(queryRoutes.routeExists(3, 6))
             .isTrue();

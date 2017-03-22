@@ -11,8 +11,7 @@ public class QueryRoutes {
 
   public boolean routeExists(final Integer departureStationId, final Integer arrivalStationId) {
     return busRoutes
-            .filterByStationId(departureStationId)
-            .filterByStationId(arrivalStationId)
-            .count() > 0;
+            .directRoutes(departureStationId, arrivalStationId)
+            .size() > 0;
   }
 }
